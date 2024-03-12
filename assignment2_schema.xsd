@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<!--
+   	<xs:element name="ENTER_NAME_OF_ROOT_ELEMENT_HERE">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+-->
+
+<!-- Define saleItem with restricted values, Y or N -->
+<xs:attribute name="saleItem" type="saleItem_c" />
+<xs:simpleType name="saleItem_c">
+	<xs:restriction base = "xs:string">
+		<xs:enumeration value = "Y" />
+		<xs:enumeration value = "N" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!-- Define itemPrice with saleItem attribute and its own texts -->
+<xs:element name = "itemPrice">
+	<xs:complexType>
+		<xs:simpleContent>
+			<xs:extension base = "xs:decimal">
+				<xs:attribute ref="saleItem" />
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+</xs:element>
+
+<!-- Define itemQty element -->
+<xs:element name = "itemQty" type = "xs:nonNegativeInteger" />
+
+<!-- Define itemNumber attribute -->
+<xs:attribute name = "itemNumber" type = "xs:string" />
+
+<!-- Define item element with itemNumber attribute and itemPrice itemQty elements without its own texts -->
+<xs:element name = "item">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element ref="itemPrice" />
+			<xs:element ref="itemQty" />
+		</xs:sequence>
+		
+		<xs:attribute ref="itemNumber" />
+	</xs:complexType>
+</xs:element>
+
+<!-- Define items element with one or more item elements -->
+<xs:element name="items">
+	<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="item" minOccurs="1" maxOccurs="unbounded" />
+			</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+<!-- Define orderDate element -->
+<xs:element name = "orderDate" type = "xs:date" />
+
+<!-- Define orderID attribute -->
+<xs:attribute name="orderID" type="orderID_c" />
+<xs:simpleType name="orderID_c">
+	<xs:restriction base="xs:ID">
+		<xs:pattern value="or\d{4}" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!-- Define orderBy attribute -->
+<xs:attribute name = "orderBy" type = "xs:IDREF" />
+
+<!-- Define order element with orderID orderBy attributes and orderDate items elements without its own texts -->
+<xs:element name = "order">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element ref="orderDate" />
+			<xs:element ref="items" />
+		</xs:sequence>
+		
+		<xs:attribute ref="orderID" />
+		<xs:attribute ref="orderBy" />
+	</xs:complexType>
+</xs:element>
+
+<!-- Define orders elements with zero or more order elements -->
+<xs:element name="orders">
+	<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="order" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+<!-- Define email element -->
+<xs:element name ="email" type = "xs:string" />
+<!--
+<xs:element name ="email" type = "email_c" />
+<xs:simpleType name="email_c">
+	<xs:restriction base="xs:string">
+		<xs:pattern value="[A-Z0-9]+@[A-Z0-9]+\.[A-Z]{2,}" />
+	</xs:restriction>
+</xs:simpleType>
+ -->
+
+<!-- Define phone element -->
+<xs:element name="phone" type="phone_c" />
+<xs:simpleType name="phone_c">
+	<xs:restriction base="xs:string">
+		<xs:pattern value="\(\d{3}\) \d{3}-\d{4}" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!-- Define address element -->
+<xs:element name="address" type="xs:string" />
+
+<!-- Define title attribute -->
+<xs:attribute name="title" type="title_c" />
+<xs:simpleType name = "title_c">
+	<xs:restriction base = "xs:string">
+		<xs:enumeration value = "Mr." />
+		<xs:enumeration value = "Ms." />
+		<xs:enumeration value = "Mrs." />
+	</xs:restriction>
+</xs:simpleType>
+
+<!-- Define name element with title attribute and its own texts -->
+<xs:element name = "name">
+	<xs:complexType>
+		<xs:simpleContent>
+			<xs:extension base = "xs:string">
+				<xs:attribute ref="title" />
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+</xs:element>
+
+<!-- Define custID attribute -->
+<xs:attribute name="custID" type="custID_c" />
+<xs:simpleType name="custID_c">
+	<xs:restriction base="xs:ID">
+		<xs:pattern value="cust\d{3}" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!-- Define customer element with custID attribute and name address phone email orders elements without its own texts -->
+<xs:element name = "customer">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element ref="name" />
+			<xs:element ref="address" />
+			<xs:element ref="phone" />
+			<xs:element ref="email" minOccurs="0" />
+			<xs:element ref="orders" />
+		</xs:sequence>
+		
+		<xs:attribute ref="custID" />
+	</xs:complexType>
+</xs:element>
+
+<!-- Define root customers element with one or more customer elements -->
+<xs:element name="customers">
+	<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="customer" minOccurs="1" maxOccurs="unbounded" />
+			</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+</xs:schema>
